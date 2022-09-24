@@ -1,151 +1,190 @@
-// HTML Elements
-// These are actually DOM elements, if we're being picky
-// If the DOM lagged in loading, you could potentially run into an issue where 
-const statusDiv = document.querySelector(".status");
-const resetDiv = document.querySelector(".reset");
-const cellDivs = document.querySelectorAll(".game-cell");
+let status ="player-1";
+let symbols = ["X","O"];
+let gridItems = document.getElementsByClassName("grid-item");
+gridItems = [...gridItems]
+let turns = [[0],[0],[0],[0],[0],[0],[0],[0],[0]]
+let symbol1=""
+let symbol2=""
+let result =""
+let winner=""
+let isEmpty=""
+document.getElementById("status-header").innerText="It's "+status+"'s" + " turn"
 
-// game constants
-// cool symbols
-const xSymbol = "⋊";
-const oSymbol = "𝒪";
 
-// game variables
-let gameIsLive = true;
-let xIsNext = true;
+function clickCheck(){    
+    let updateNo="";
+   let clickedElement ="";
+   clickedElement = event.target.id   
+event.target.innerText= decideSymbol();
+updateNo = (status =="player-1")?updateNo=1: updateNo=2;
+   updates(updateNo, clickedElement);
+    result =checkWin();
+    if(result==true){
+    document.getElementById("blocker").style.visibility = "visible";
+    document.getElementById("blocker-mess").innerText= winner+" has won"
+    document.getElementById("blocker-mess").style.visibility = "visible";
 
-// functions
-// nice use of ternery
-const letterToSymbol = (letter) => (letter === "x" ? xSymbol : oSymbol);
 
-const handleWin = (letter) => {
-  gameIsLive = false;
-  if (letter === "x") {
-    statusDiv.innerHTML = `${letterToSymbol(letter)} has won!`;
-  } else {
-    statusDiv.innerHTML = `<span>${letterToSymbol(letter)} has won!</span>`;
-  }
-};
+    }else{
+        isEmpty=checkFull(gridItems)
+        if(isEmpty==true){
+            document.getElementById("blocker").style.visibility = "visible";
+            document.getElementById("blocker-mess").innerText= "It's a tie"
+            document.getElementById("blocker-mess").style.visibility = "visible";
 
-const checkGameStatus = () => {
-  const topLeft = cellDivs[0].classList[1];
-  const topMiddle = cellDivs[1].classList[1];
-  const topRight = cellDivs[2].classList[1];
-  const middleLeft = cellDivs[3].classList[1];
-  const middleMiddle = cellDivs[4].classList[1];
-  const middleRight = cellDivs[5].classList[1];
-  const bottomLeft = cellDivs[6].classList[1];
-  const bottomMiddle = cellDivs[7].classList[1];
-  const bottomRight = cellDivs[8].classList[1];
+        }
+        event.target.removeEventListener("click", clickCheck) 
 
-  // check winner
-  if (topLeft && topLeft === topMiddle && topLeft === topRight) {
-    handleWin(topLeft);
-    cellDivs[0].classList.add("won");
-    cellDivs[1].classList.add("won");
-    cellDivs[2].classList.add("won");
-  } else if (
-    middleLeft &&
-    middleLeft === middleMiddle &&
-    middleLeft === middleRight
-  ) {
-    handleWin(middleLeft);
-    cellDivs[3].classList.add("won");
-    cellDivs[4].classList.add("won");
-    cellDivs[5].classList.add("won");
-  } else if (
-    bottomLeft &&
-    bottomLeft === bottomMiddle &&
-    bottomLeft === bottomRight
-  ) {
-    handleWin(bottomLeft);
-    cellDivs[6].classList.add("won");
-    cellDivs[7].classList.add("won");
-    cellDivs[8].classList.add("won");
-  } else if (topLeft && topLeft === middleLeft && topLeft === bottomLeft) {
-    handleWin(topLeft);
-    cellDivs[0].classList.add("won");
-    cellDivs[3].classList.add("won");
-    cellDivs[6].classList.add("won");
-  } else if (
-    topMiddle &&
-    topMiddle === middleMiddle &&
-    topMiddle === bottomMiddle
-  ) {
-    handleWin(topMiddle);
-    cellDivs[1].classList.add("won");
-    cellDivs[4].classList.add("won");
-    cellDivs[7].classList.add("won");
-  } else if (topRight && topRight === middleRight && topRight === bottomRight) {
-    handleWin(topRight);
-    cellDivs[2].classList.add("won");
-    cellDivs[5].classList.add("won");
-    cellDivs[8].classList.add("won");
-  } else if (topLeft && topLeft === middleMiddle && topLeft === bottomRight) {
-    handleWin(topLeft);
-    cellDivs[0].classList.add("won");
-    cellDivs[4].classList.add("won");
-    cellDivs[8].classList.add("won");
-  } else if (topRight && topRight === middleMiddle && topRight === bottomLeft) {
-    handleWin(topRight);
-    cellDivs[2].classList.add("won");
-    cellDivs[4].classList.add("won");
-    cellDivs[6].classList.add("won");
-  } else if (
-    topLeft &&
-    topMiddle &&
-    topRight &&
-    middleLeft &&
-    middleMiddle &&
-    middleRight &&
-    bottomLeft &&
-    bottomMiddle &&
-    bottomRight
-  ) {
-    gameIsLive = false;
-    statusDiv.innerHTML = "Game is tied!";
-  } else {
-    xIsNext = !xIsNext;
-    if (xIsNext) {
-      statusDiv.innerHTML = `${xSymbol} is next`;
-    } else {
-      statusDiv.innerHTML = `<span>${oSymbol} is next</span>`;
+
+
     }
-  }
-};
-// event Handlers
-const handleReset = () => {
-  xIsNext = true;
-  statusDiv.innerHTML = `${xSymbol} is next`;
-  for (const cellDiv of cellDivs) {
-    cellDiv.classList.remove("x");
-    cellDiv.classList.remove("o");
-    cellDiv.classList.remove("won");
-  }
-  gameIsLive = true;
-};
 
-const handleCellClick = (e) => {
-  const classList = e.target.classList;
-
-  if (!gameIsLive || classList[1] === "x" || classList[1] === "o") {
-    return;
-  }
-
-  if (xIsNext) {
-    classList.add("x");
-    checkGameStatus();
-  } else {
-    classList.add("o");
-    checkGameStatus();
-  }
-};
-
-// event listeners
-resetDiv.addEventListener("click", handleReset);
-
-for (const cellDiv of cellDivs) {
-  cellDiv.addEventListener("click", handleCellClick);
 }
 
-// This is all GREAT work, Yoel! I would challenge you to implement a score-keeping feature and even an option to play to computuer.
+gridItems.forEach(block =>{
+    block.addEventListener("click", clickCheck)})
+
+    
+//decide which symbol
+function decideSymbol(){  
+    let symbolDec = Math.floor(Math.random()*2)
+    if(status=="player-1" && turns.every(arr=>arr[0]==0)){  
+        symbol1 =symbols[symbolDec];   
+        if(symbol1=="X"){
+        symbol2 ="O"
+        }else{
+            symbol2="X"
+        }
+        return symbol1
+    }else{      
+
+        if(status=="player-1"){
+            return symbol1
+
+        }
+        if(status=="player-2"){
+            return symbol2
+
+        }
+        
+    }
+    
+}
+function updates(updateNo, eventEle){
+    //update array and status
+    (updateNo==1)?status="player-2": status="player-1"
+    document.getElementById("status-header").innerText="It's "+status+"'s" + " turn"
+    if(status=="player-1"){
+        document.getElementById("status-header").style.background="#e74c3c"
+
+    }else{
+        document.getElementById("status-header").style.background="pink"
+
+    }
+
+    if(eventEle=="grid-1"){
+    turns[0][0]=updateNo
+    }else if(eventEle=="grid-2"){
+        turns[1][0]=updateNo
+    }
+    else if(eventEle=="grid-3"){
+        turns[2][0]=updateNo
+    }
+    else if(eventEle=="grid-4"){
+        turns[3][0]=updateNo
+    }
+    else if(eventEle=="grid-5"){
+        turns[4][0]=updateNo
+    }
+    else if(eventEle=="grid-6"){
+        turns[5][0]=updateNo
+    }
+    else if(eventEle=="grid-7"){
+        turns[6][0]=updateNo
+    }
+    else if(eventEle=="grid-8"){
+        turns[7][0]=updateNo
+    }
+    else{
+        turns[8][0]=updateNo
+    }
+
+}
+function checkWin(){
+    //checks rows
+    let win = false
+for(let i=0;i<=3;i+=3){
+  if(turns[i][0]==turns[i+1][0]&&turns[i][0]==turns[i+2]){
+    if(turns[i][0]!=0 && turns[i+2][0]!=0 && turns[i+1][0]!=0){
+        if(turns[i][0]==1){
+            winner="player 1"
+            win=true
+            return win
+        }else{
+            winner="player 2"
+            win=true
+            return win
+        }
+        
+       
+  }
+}
+if(turns[i][0]==turns[i+3][0]&&turns[i][0]==turns[i+6]){
+    if(turns[i][0]!=0 && turns[i+3][0]!=0 && turns[i+6][0]!=0){
+        if(turns[i][0]==1){
+            winner="player 1"
+            win=true
+            return win
+        }else{
+            winner="player 2"
+            win=true
+            return win
+        }
+        
+  }
+}
+if(turns[i][0]==2|| turns[i][0]==0){
+if(turns[i][0]==turns[i+4][0]&& turns[i][0]==turns[i+8]){
+    if(turns[i][0]!=0 && turns[i+4][0]!=0 && turns[i+8][0]!=0){
+        if(turns[i][0]==1){
+            winner="player 1"
+            win=true
+            return win
+        }else{
+            winner="player 2"
+            win=true
+            return win
+        }
+        
+  }
+}
+if(turns[i][0]==turns[i+2][0]&& turns[i][0]==turns[i+4]){
+    if(turns[i][0]!=0 && turns[i+2][0]!=0 && turns[i+4][0]!=0){
+        if(turns[i][0]==1){
+            winner="player 1"
+            win=true
+            return win
+        }else{
+            winner="player 2"
+            win=true
+            return win
+        }
+        
+  }
+}
+}
+}
+}
+
+function checkFull(arr){
+   let fullCheck;
+   fullCheck = turns.every(block=>block[0]!=0)
+  if(fullCheck==true){
+    //   arr.forEach(block=>block.innerText="")
+    return true;
+ }
+}          
+
+
+        
+    

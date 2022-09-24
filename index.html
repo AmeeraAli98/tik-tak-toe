@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <title>Tic Tac Toe</title>
-  </head>
-  <body>
-    <div class="container">
-      <h1 class="title">Tic <span>Tac</span> Toe</h1>
-      <div class="status-action">
-        <div class="status">⋊ is next</div>
-        <div class="reset">Reset</div>
-      </div>
-      <div class="game-grid">
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-        <div class="game-cell"></div>
-      </div>
-    </div>
-    <script type="text/javascript" src="js/app.js"></script>
-  </body>
+<head>
+  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe</title>
+</head>
+<body>
+  <header id="status-header">
+    
+  </header>
+  <div id="container">
+    <div class="grid-item" id="grid-1"></div>
+    <div class="grid-item" id="grid-2"></div>
+    <div class="grid-item" id="grid-3"></div>
+    <div class="grid-item" id="grid-4"></div>
+    <div class="grid-item" id="grid-5"></div>
+    <div class="grid-item" id="grid-6"></div>
+    <div class="grid-item" id="grid-7"></div>
+    <div class="grid-item" id="grid-8"></div>
+    <div class="grid-item" id="grid-9"></div>
+    
+  </div>
+  <div id="blocker">
+  </div>
+  <div id="blocker-mess">Player 1 has won</div>
+
+  <script src="js/app.js"></script>
+</body>
 </html>
